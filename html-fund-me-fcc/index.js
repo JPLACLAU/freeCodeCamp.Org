@@ -2,8 +2,8 @@ console.log("hi from script tag") //this is javascript
 
 import { ethers } from "./ethers-5.6.esm.min.js"
 
-const connectButton = document.getElementByEd("connectButton")
-const fundButton = document.getElementByEd("fundButton")
+const connectButton = document.getElementById("connectButton")
+const fundButton = document.getElementById("fundButton")
 connectButton.onclick = connect
 fundButton.onclick = fund
 
