@@ -1,5 +1,12 @@
 console.log("hi from script tag") //this is javascript
 
+import { ethers } from "./ethers-5.6.esm.min.js"
+
+const connectButton = document.getElementByEd("connectButton")
+const fundButton = document.getElementByEd("fundButton")
+connectButton.onclick = connect
+fundButton.onclick = fundButton
+
 async function connect() {
     if (typeof window.ethereum !== "undefined") {
         console.log("I see a metamask! Yupiii!")
