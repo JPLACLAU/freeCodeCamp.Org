@@ -22,7 +22,7 @@
     "lint:fix": "solhint 'contracts/**/*.sol' --fix",
     "format": "prettier --write .",
     "coverage": "hardhat coverage",
-    "start": "export SET NODE_OPTIONS=--openssl-legacy-provider && npx hardhat node"
+   
 
   }
 }
