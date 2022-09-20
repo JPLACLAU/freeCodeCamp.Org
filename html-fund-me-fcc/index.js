@@ -10,3 +10,5 @@ async function connect() {
       "Please Install Metamask.";
   }
 }
+
+async function fund(ethAmount) {}
