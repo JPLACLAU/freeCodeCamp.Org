@@ -26,12 +26,25 @@ async function fund() {
         const signer = provider.getSigner()
         console.log(signer)
         const contract = new ethers.Contract(contractAddress, abi, signer)
-        const transactionResponse = await contract.fund({
-            value: ethers.utils.parseEther(ethAmount),
-        })
+        try {
+            const transactionResponse = await contract.fund({
+                value: ethers.utils.parseEther(ethAmount),
+            })
+        } catch (error) {
+            console.log(error)
+        }
+        // provider/ conecction to blockchain,
+        //signer / wallet / someonewith gas
+        //contract that  that we are interacting
+        // abi , address
     }
-    // provider/ conecction to blockchain,
-    //signer / wallet / someonewith gas
-    //contract that  that we are interacting
-    // abi , address
+}
+
+function listenForTransactionMine(transactionResponse, provider) {
+    console.log(`Mining ${transactionResponse.hash}...`)
+    provider.once(transactionResponse.hash, (transactionReceipt) => {
+        console.log(
+            `Completed with ${transactionReceipt.confirmations} confirmations`
+        )
+    })
 }
