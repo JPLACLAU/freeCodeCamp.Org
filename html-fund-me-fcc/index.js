@@ -5,7 +5,7 @@ import { ethers } from "./ethers-5.6.esm.min.js"
 const connectButton = document.getElementByEd("connectButton")
 const fundButton = document.getElementByEd("fundButton")
 connectButton.onclick = connect
-fundButton.onclick = fundButton
+fundButton.onclick = fund
 
 async function connect() {
     if (typeof window.ethereum !== "undefined") {
@@ -18,7 +18,7 @@ async function connect() {
 }
 
 async function fund(ethAmount) {
-    console.log("Funding with ${ethAmount}...")
+    console.log(`Funding with ${ethAmount}...`)
     if (typeof window.ethereum !== "undefined") {
     }
     // provider/ conecction to blockchain,
