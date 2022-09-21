@@ -6,9 +6,12 @@ import { abi, contractAddress } from "./constants.js"
 const connectButton = document.getElementById("connectButton")
 const fundButton = document.getElementById("fundButton")
 const balanceButton = document.getElementById("balanceButton")
+const withdrawButton = document.getElementById("withdrawButton")
+
 connectButton.onclick = connect
 fundButton.onclick = fund
 balanceButton.onclick = getBalance
+withdrawButton.onclick = withdraw
 
 async function connect() {
     if (typeof window.ethereum !== "undefined") {
@@ -62,4 +65,20 @@ function listenForTransactionMine(transactionResponse, provider) {
             resolve()
         })
     })
+}
+
+async function withdraw() {
+    console.log("Withdrawing...")
+    if (typeof window.ethereum !== "undefined") {
+        const provider = new ethers.providers.Web3Provider(window.ethereum)
+        await provider.send("eth_requestAccounts", [])
+        const signer = provider.getSigner()
+        const contract = new ethers.Contract(contractAddress, abi, signer)
+        try {
+            const transactionResponse = await contract.withdraw()
+            await listenForTransactionMine(transactionResponse, provider)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
