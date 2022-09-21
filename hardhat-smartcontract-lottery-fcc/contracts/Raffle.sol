@@ -5,7 +5,7 @@ error Raffle__NotEnoughETHEntered();
 
 contract Raffle {
     uint256 private immutable i_entranceFee;
-    address[] player;
+    address payable[] private s_player;
 
     constructor(uint256 entranceFee) {
         i_entranceFee = entranceFee;
@@ -19,5 +19,9 @@ contract Raffle {
 
     function getEntranceFee() public view returns (uint256) {
         return i_entranceFee;
+    }
+
+    function getPlayer() public view returns (address) {
+        return s_players[index];
     }
 }
