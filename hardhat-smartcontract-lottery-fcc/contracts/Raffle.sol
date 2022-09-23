@@ -21,6 +21,8 @@ contract Raffle {
         emit RaffleEnter(msg.sender);
     }
 
+    function puckRandomWinner() external {}
+
     function getEntranceFee() public view returns (uint256) {
         return i_entranceFee;
     }
