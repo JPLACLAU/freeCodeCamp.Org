@@ -50,7 +50,9 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
     /**
      * @dev
      */
-    function checkUpkeep() external override
+    function checkUpkeep(
+        bytes calldata /*checkData*/
+    ) external override {}
 
     function requestRandomWinner() external {
         // 2 transaction process
