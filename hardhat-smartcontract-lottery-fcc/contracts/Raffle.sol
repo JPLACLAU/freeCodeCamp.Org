@@ -32,7 +32,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
     // what if we also have pending and others ?- > uint256
     RaffleState private s_raffleState;
     uint256 private s_lastTimeStamp;
-    uint256 private s_interval;
+    uint256 private immutable i_interval;
 
     event RaffleEnter(address indexed player);
     event RequestedRaffleWinner(uint256 requestId);
@@ -53,7 +53,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         i_callbackGasLimit = callbackGasLimit;
         s_raffleState = RaffleState.OPEN;
         s_lastTimeStamp = block.timestamp;
-        s_interval = interval;
+        i_interval = interval;
     }
 
     function enterRaffle() public payable {
@@ -68,11 +68,26 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
     }
 
     /**
-     * @dev
+     * @dev Chainlink Keeper nodes call
      */
+
     function checkUpkeep(
-        bytes calldata /*checkData*/
-    ) external override {}
+        bytes memory /* checkData */
+    )
+        public
+        view
+        override
+        returns (
+            bool upkeepNeeded,
+            bytes memory /* performData */
+        )
+    {
+        bool isOpen = RaffleState.OPEN == s_raffleState;
+        bool timePassed = ((block.timestamp - s_lastTimeStamp) > i_interval);
+        bool hasPlayers = s_players.length > 0;
+        bool hasBalance = address(this).balance > 0;
+        upkeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers);
+    }
 
     function requestRandomWinner() external {
         // 2 transaction process
