@@ -8,6 +8,7 @@ import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 error Raffle__NotEnoughETHEntered();
 error Raffle__TransferFailed();
 error Raffle__NotOpen();
+error Raffle__UpkeepNotNeeded(uint256 currentBalance, uint256 numPlayers, uint256 raffleState);
 
 contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
     /*type declarations */
@@ -89,16 +90,27 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         upkeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers);
     }
 
-    function requestRandomWinner() external {
-        // 2 transaction process
+    function performUpkeep(
+        bytes calldata /* performData */
+    ) external override {
+        (bool upkeepNeeded, ) = checkUpkeep("");
+        // require(upkeepNeeded, "Upkeep not needed");
+        if (!upkeepNeeded) {
+            revert Raffle__UpkeepNotNeeded(
+                address(this).balance,
+                s_players.length,
+                uint256(s_raffleState)
+            );
+        }
         s_raffleState = RaffleState.CALCULATING;
-        uint256 requestId = i_vrCoordinator.requestRandomWords(
-            i_gasLane, // gasLane
+        uint256 requestId = i_vrfCoordinator.requestRandomWords(
+            i_gasLane,
             i_subscriptionId,
             REQUEST_CONFIRMATIONS,
             i_callbackGasLimit,
             NUM_WORDS
         );
+        // Quiz... is this redundant?
         emit RequestedRaffleWinner(requestId);
     }
 
